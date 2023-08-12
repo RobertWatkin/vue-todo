@@ -1,25 +1,45 @@
 <script setup>
 // creating reactive data method 1 
-import { ref, reactive } from "vue";
+import { reactive, defineEmits } from "vue";
+
+const emit = defineEmits(["create-todo"]);
 
 // ref method of data binding
-const todo = ref("test");
-console.log(todo.value);   // have to use .value to access the value within the script tag. Within template can just use todo
+const todoState = reactive({
+  todo: "",
+  invalid: null,
+  errMsg: "",
+});
 
 // reactive method of data binding
 // const todoState = reactive({
 //     todo: "This is a test",
 // });
 // To access the reactive method just do todoState.todo
+
+
+
+const createTodo = () => {
+  todoState.invalid = null;
+  if (todoState.todo !== "") {
+    emit("create-todo", todoState.todo);
+    todoState.todo = "";
+    return;
+  }
+  todoState.invalid = true;
+  todoState.errMsg = "Todo value cannot be empty";
+};
 </script>
 
 
 <template>
-    <div class="input-wrap">
-        <input type="text" v-model="todo" />
-        <button>Create</button>
-    </div>
-    <!-- <p>{{ todo }}</p> -->
+  <div class="input-wrap" :class="{ 'input-err': todoState.invalid }">
+    <input type="text" v-model="todoState.todo" />
+    <button @click="createTodo()">Create</button>
+  </div>
+  <!-- <p>{{ todo }}</p> -->
+
+  <p v-show="todoState.invalid" class="err-msg">{{ todoState.errMsg }}</p>
 </template>
 
 
@@ -28,6 +48,10 @@ console.log(todo.value);   // have to use .value to access the value within the 
   display: flex;
   transition: 250ms ease;
   border: 2px solid #41b080;
+
+  &.input-err {
+    border-color: red;
+  }
 
   &:focus-within {
     box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1),
@@ -48,5 +72,14 @@ console.log(todo.value);   // have to use .value to access the value within the 
     padding: 8px 16px;
     border: none;
   }
+
+
+}
+
+.err-msg {
+  margin-top: 6px;
+  font-size: 12px;
+  text-align: center;
+  color: red;
 }
 </style>
