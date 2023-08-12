@@ -27,6 +27,10 @@ const toggleEditTodo = (todoPos) => {
 const updateTodo = (todo, todoPos) => {
   todoList.value[todoPos].todo = todo;
 }
+
+const deleteTodo = (todoId) => {
+  todoList.value = todoList.value.filter((todo) => todo.id !== todoId); // essentially loops through each item in todoList and returns a new array with the items that don't match the todoId
+}
 </script>
 
 <template>
@@ -35,7 +39,7 @@ const updateTodo = (todo, todoPos) => {
 
     <TodoCreator @create-todo="createTodo"/>
     <ul v-if="todoList.length > 0">
-      <TodoItem v-for="(todo, index) in todoList" :todo="todo" :index="index" @toggle-complete="toggleTodoComplete" @edit-todo="toggleEditTodo" @update-todo="updateTodo" />
+      <TodoItem v-for="(todo, index) in todoList" :todo="todo" :index="index" @toggle-complete="toggleTodoComplete" @edit-todo="toggleEditTodo" @update-todo="updateTodo" @delete-todo="deleteTodo" />
     </ul>
     <p class="todos-msg" v-else>
       <Icon icon="noto-v1:sad-but-relieved-face" width="22" />
