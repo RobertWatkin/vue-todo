@@ -15,6 +15,18 @@ const createTodo = (todo) => {
     isEditing: null,
   });
 }
+
+const toggleTodoComplete = (todoPos) => {
+  todoList.value[todoPos].isCompleted = !todoList.value[todoPos].isCompleted;
+}
+
+const toggleEditTodo = (todoPos) => {
+  todoList.value[todoPos].isEditing = !todoList.value[todoPos].isEditing;
+}
+
+const updateTodo = (todo, todoPos) => {
+  todoList.value[todoPos].todo = todo;
+}
 </script>
 
 <template>
@@ -23,7 +35,7 @@ const createTodo = (todo) => {
 
     <TodoCreator @create-todo="createTodo"/>
     <ul v-if="todoList.length > 0">
-      <TodoItem v-for="todo in todoList" :todo="todo" />
+      <TodoItem v-for="(todo, index) in todoList" :todo="todo" :index="index" @toggle-complete="toggleTodoComplete" @edit-todo="toggleEditTodo" @update-todo="updateTodo" />
     </ul>
     <p class="todos-msg" v-else>
       <Icon icon="noto-v1:sad-but-relieved-face" width="22" />
